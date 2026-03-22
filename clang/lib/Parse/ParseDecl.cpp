@@ -4456,6 +4456,18 @@ void Parser::ParseDeclarationSpecifiers(
     case tok::kw___interface:
     case tok::kw_union: {
       tok::TokenKind Kind = Tok.getKind();
+
+      // If already has a TST, skip it.
+      if (DS.getTypeSpecType() != DeclSpec::TST_unspecified) {
+        Diag(Tok, diag::err_invalid_decl_spec_combination)
+            << DeclSpec::getSpecifierName(DS.getTypeSpecType(),
+                                          Actions.getPrintingPolicy());
+
+        ConsumeToken();
+        DS.SetTypeSpecError();
+        continue;
+      }
+
       ConsumeToken();
 
       // These are attributes following class specifiers.

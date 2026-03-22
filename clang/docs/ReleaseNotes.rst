@@ -382,6 +382,7 @@ Bug Fixes to AST Handling
 - Fixed a bug where explicit nullability property attributes were not stored in AST nodes in Objective-C. (#GH179703)
 - Fixed a crash when parsing Doxygen ``@param`` commands attached to invalid declarations or non-function entities. (#GH182737)
 - Fixed a assertion when __block is used on global variables in C mode. (#GH183974)
+- Fixed a crash when a type-name is incorrectly combined with a class specifier within a template default argument. (#GH187664)
 
 Miscellaneous Bug Fixes
 ^^^^^^^^^^^^^^^^^^^^^^^
