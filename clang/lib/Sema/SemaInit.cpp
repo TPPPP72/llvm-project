@@ -4380,10 +4380,10 @@ static void TryArrayCopy(Sema &S, const InitializationKind &Kind,
       InitializedEntity::InitializeElement(S.Context, 0, Entity);
   QualType InitEltT =
       S.Context.getAsArrayType(Initializer->getType())->getElementType();
-  OpaqueValueExpr OVE(Initializer->getExprLoc(), InitEltT,
-                      Initializer->getValueKind(),
-                      Initializer->getObjectKind());
-  Expr *OVEAsExpr = &OVE;
+  OpaqueValueExpr *OVE = new (S.Context) OpaqueValueExpr(
+      Initializer->getExprLoc(), InitEltT, Initializer->getValueKind(),
+      Initializer->getObjectKind());
+  Expr *OVEAsExpr = OVE;
   Sequence.InitializeFrom(S, Element, Kind, OVEAsExpr,
                           /*TopLevelOfInitList*/ false,
                           TreatUnavailableAsInvalid);
