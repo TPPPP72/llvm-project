@@ -5984,11 +5984,15 @@ namespace {
           return;
         }
       }
+
+      NestedNameSpecifierLoc QualifierLoc;
+      if (TL.getTypePtr()->getQualifier())
+        QualifierLoc = DS.getTypeSpecScope().getWithLocInContext(Context);
+
       TL.set(TL.getTypePtr()->getKeyword() != ElaboratedTypeKeyword::None
                  ? DS.getTypeSpecTypeLoc()
                  : SourceLocation(),
-             DS.getTypeSpecScope().getWithLocInContext(Context),
-             DS.getTypeSpecTypeNameLoc());
+             QualifierLoc, DS.getTypeSpecTypeNameLoc());
     }
     void VisitUnresolvedUsingTypeLoc(UnresolvedUsingTypeLoc TL) {
       if (DS.getTypeSpecType() == TST_typename) {
@@ -6171,7 +6175,11 @@ namespace {
                                          ElaboratedTypeKeyword::None
                                      ? DS.getTypeSpecTypeLoc()
                                      : SourceLocation());
-      TL.setQualifierLoc(DS.getTypeSpecScope().getWithLocInContext(Context));
+
+      if (TL.getTypePtr()->getQualifier() &&
+          DS.getTypeSpecScope().getRange().isValid())
+        TL.setQualifierLoc(DS.getTypeSpecScope().getWithLocInContext(Context));
+
       TL.setNameLoc(DS.getTypeSpecTypeNameLoc());
     }
     void VisitAtomicTypeLoc(AtomicTypeLoc TL) {
